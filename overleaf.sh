@@ -120,6 +120,7 @@ install_chinese() {
         mkdir -p /usr/share/fonts/chinese
         wget -O /usr/share/fonts/chinese/simsun.ttc "https://github.com/jiaxiaochu/font/raw/master/simsun.ttc" || true
         wget -O /usr/share/fonts/chinese/simkai.ttf "https://github.com/jiaxiaochu/font/raw/master/simkai.ttf" || true
+        wget -O /usr/share/fonts/chinese/FangSong.ttf "https://github.com/jiaxiaochu/font/raw/master/simfang.ttf" || true
         fc-cache -fv
     ' && echo -e "${GREEN}✓ 中文支持已安装!${NC}" || {
         echo -e "${RED}✗ 中文支持安装失败!${NC}"
