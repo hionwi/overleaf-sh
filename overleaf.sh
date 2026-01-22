@@ -1,6 +1,5 @@
 #!/bin/bash
-# OVERSEI Installer v5.1
-# GitHub: https://github.com/AMTOPA/Overleaf-Sharelatex-Easy-Install  
+# OVERSEI Installer
 
 # ASCII Art and Colors
 RED='\033[1;31m'; GREEN='\033[1;32m'; YELLOW='\033[1;33m'
@@ -96,7 +95,6 @@ install_base() {
     sed -i \
         -e "s/^OVERLEAF_LISTEN_IP=.*/OVERLEAF_LISTEN_IP=${LISTEN_IP}/" \
         -e 's/^OVERLEAF_PORT=.*/OVERLEAF_PORT=8888/' \
-        -e 's/^MONGO_VERSION=.*/MONGO_VERSION=6.0/' \
         config/overleaf.rc
 
     echo -e "${GREEN}✓ 启动服务中...${NC}"
@@ -112,15 +110,17 @@ install_chinese() {
     fi
 
     docker exec sharelatex bash -c '
-        export http_proxy=http://172.29.176.1:10808
-        export https_proxy=http://172.29.176.1:10808
+        # export http_proxy=http://172.29.176.1:10808  //代理地址
+        # export https_proxy=http://172.29.176.1:10808 //代理地址
         tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet
         tlmgr update --self
         tlmgr install collection-langchinese xecjk ctex || exit 1
         mkdir -p /usr/share/fonts/chinese
+        # 添加常用中文字体
         wget -O /usr/share/fonts/chinese/simsun.ttc "https://github.com/jiaxiaochu/font/raw/master/simsun.ttc" || true
         wget -O /usr/share/fonts/chinese/simkai.ttf "https://github.com/jiaxiaochu/font/raw/master/simkai.ttf" || true
         wget -O /usr/share/fonts/chinese/FangSong.ttf "https://github.com/jiaxiaochu/font/raw/master/simfang.ttf" || true
+        wget -O /usr/share/fonts/chinese/simhei.ttf "https://github.com/jiaxiaochu/font/raw/master/simhei.ttf" || true
         fc-cache -fv
     ' && echo -e "${GREEN}✓ 中文支持已安装!${NC}" || {
         echo -e "${RED}✗ 中文支持安装失败!${NC}"
