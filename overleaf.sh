@@ -53,12 +53,11 @@ show_menu() {
     )
     select opt in "${options[@]}"; do
         case $REPLY in
-            1) install_base; install_chinese; install_fonts; install_packages ;;
+            1) install_base; install_chinese; install_packages ;;
             2) install_base ;;
             3) install_chinese ;;
-            4) install_fonts ;;
-            5) install_packages ;;
-            6) exit 0 ;;
+            4) install_packages ;;
+            5) exit 0 ;;
             *) echo -e "${RED}无效选项!${NC}";;
         esac
         break
@@ -110,8 +109,6 @@ install_chinese() {
     fi
 
     docker exec sharelatex bash -c '
-        # export http_proxy=http://172.29.176.1:10808  //代理地址
-        # export https_proxy=http://172.29.176.1:10808 //代理地址
         tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet
         tlmgr update --self
         tlmgr install collection-langchinese xecjk ctex || exit 1
@@ -127,32 +124,6 @@ install_chinese() {
     }
 }
 
-install_fonts() {
-    echo -e "\n${YELLOW}▶ 字体安装选项:${NC}"
-    PS3="请选择字体包: "
-    options=(
-        "Windows核心字体"
-        "Adobe字体" 
-        "思源字体"
-        "返回"
-    )
-    select opt in "${options[@]}"; do
-        case $REPLY in
-            1) 
-                docker exec sharelatex bash -c "apt-get update && apt-get install -y ttf-mscorefonts-installer" ;;
-            2) 
-                docker exec sharelatex bash -c "apt-get update && apt-get install -y fonts-adobe-*" ;;
-            3) 
-                docker exec sharelatex bash -c "apt-get update && apt-get install -y fonts-noto-cjk" ;;
-            4) break ;;
-            *) echo -e "${RED}无效选择!${NC}"; continue ;;
-        esac
-        docker exec sharelatex fc-cache -fv
-        echo -e "${GREEN}✓ 字体缓存已刷新${NC}"
-        break
-    done
-}
-
 # New: Install LaTeX Packages
 install_packages() {
     echo -e "\n${YELLOW}▶ 开始安装 LaTeX 宏包...${NC}"
@@ -166,19 +137,6 @@ install_packages() {
     # Ensure tlmgr is ready
     echo -e "${YELLOW}▶ 正在准备 tlmgr...${NC}"
     docker exec sharelatex bash -c "tlmgr update --self || true" > /dev/null 2>&1
-
-    # Choose mirror
-    echo -e "${BLUE}请选择 CTAN 镜像源:${NC}"
-    select mirror in "官方源 (CTAN)" "清华源 (mirrors.tuna.tsinghua.edu.cn/tex-archive)"; do
-        case $REPLY in
-            1) MIRROR=""; break ;;
-            2) 
-                docker exec sharelatex tlmgr option repository http://mirrors.tuna.tsinghua.edu.cn/tex-archive/;
-                echo -e "${GREEN}✓ 已切换至清华镜像源${NC}"
-                break ;;
-            *) echo -e "${RED}无效选择!${NC}" ;;
-        esac
-    done
 
     # Choose package type
     echo -e "${BLUE}选择宏包安装模式:${NC}"
