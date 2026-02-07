@@ -15,21 +15,14 @@
 
 脚本需要容器具有向 GitHub 推送代码的权限。请依次执行以下操作：
 
-#### 第一步：进入 Overleaf 容器
+#### 进入 Overleaf 容器
 
 ```bash
 docker exec -it sharelatex bash
 
 ```
 
-#### 第二步：安装必要工具
-
-```bash
-apt-get update && apt-get install -y openssh-client git
-
-```
-
-#### 第三步：生成 SSH 密钥
+#### 生成 SSH 密钥
 
 在提示输入 `passphrase`（密码短语）时，**直接按回车留空**，以便脚本自动化运行。
 
@@ -39,7 +32,7 @@ ssh-keygen -t ed25519 -C "overleaf-docker-key" -f /root/.ssh/id_ed25519
 
 ```
 
-#### 第四步：将公钥添加到 GitHub
+#### 将公钥添加到 GitHub
 
 1. 运行查看命令并复制输出内容：
 ```bash
@@ -51,7 +44,7 @@ cat /root/.ssh/id_ed25519.pub
 2. 前往 [GitHub SSH Settings](https://github.com/settings/keys)。
 3. 点击 **New SSH key**，Title 填 `Overleaf-Docker`，粘贴公钥并保存。
 
-#### 第五步：验证连接
+#### 验证连接
 
 在容器内运行，确保能够成功通过身份校验：
 
