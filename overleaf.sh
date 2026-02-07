@@ -44,10 +44,9 @@ TOOLKIT_DIR="$INSTALL_DIR/overleaf-toolkit"
 show_menu() {
     echo -e "${BLUE}选择安装选项:${NC}"
     options=(
-        "完整安装 (基础服务+中文支持+常用字体+宏包)"
+        "完整安装 (基础服务+中文支持+宏包)"
         "仅安装基础服务"
         "安装中文支持包"
-        "安装额外字体包"
         "安装LaTeX宏包"
         "退出"
     )
